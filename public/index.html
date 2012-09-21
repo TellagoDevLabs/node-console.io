@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Console.io Dashboard</title>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/7.2/styles/default.min.css">
+    <link href="/css/site.css" rel="stylesheet">
+    <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();      
+    </script>
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a href="/#" class="brand">console.io</a>
+          <ul class="nav">
+            <li class="active"><a href="/#">Home</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row" id="consoles">
+      </div>
+      <div style="clear:both"></div>
+      <hr>
+      copyright 2012 console.io
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+	  <script src="/js/jqconsole-2.7.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+
+      var consoles = {};
+		  var socket = io.connect('http://localhost:8080/web');
+
+      socket.on('new-console', function ( data ) {
+
+        //check whether we already have this console in the DOM in case
+        //of reconnect.
+        if ($('#' + data._id + ' .output').length > 0) {
+          console.log('console is already in the dom');
+          return;
+        }
+
+
+        $('#consoles').append(
+          '<div id="' + data._id + '" class="span6">' +
+            '<h2>' + data.hostname + '/' + data.name + '</h2>' +
+            '<div class="row">' +
+              '<div class="output span6"></div>' +
+              '<div style="clear:both">' +
+            '</div>' +
+          '</div>');
+        
+        // Creating the console.
+        var header = 'Console log output:\n';
+
+        consoles[data._id] = $('#' + data._id + ' .output').jqconsole(header, data.hostname + '> ');
+
+      });
+
+		  socket.on('news', function (data) {
+        consoles[data._id].Write( new Date().toLocaleTimeString() + '> '+ JSON.stringify(data.data, 0, 2) + '\n');
+		  });
+
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,63 @@
+body{
+	padding-top: 60px;
+}
+
+.output {
+	height: 300px;
+	/*
+	background-color: black;
+  	color: #B5E825;
+	letter-spacing: -0.03em;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1),
+                 0 0 5px rgba(181, 232, 83, 0.1),
+                 0 0 10px rgba(181, 232, 83, 0.1);
+     */
+    position: absolute;
+}
+
+/* repl.it */
+	  .console {
+        height: 400px;
+        width: 750px;
+        position:relative;
+        background-color: black;
+        border: 2px solid #CCC;
+        margin: 0 auto;
+        margin-top: 50px;
+      }
+      .jqconsole {
+        padding: 10px;
+        padding-bottom: 10px;
+      }
+      .jqconsole-cursor {
+        background-color: #999;
+      }
+      .jqconsole-blurred .jqconsole-cursor {
+        background-color: #666;
+      }
+      .jqconsole-prompt {
+        color: #0d0;
+      }
+      .jqconsole-old-prompt {
+        color: #0b0;
+        font-weight: normal;
+      }
+      .jqconsole-input {
+        color: #dd0;
+      }
+      .jqconsole-old-input {
+        color: #bb0;
+        font-weight: normal;
+      }
+      .brace {
+        color: #00FFFF;
+      }
+      .paran {
+        color: #FF00FF;
+      }
+      .bracket {
+        color: #FFFF00;
+      }
+      .jqconsole-composition {
+        background-color: red;
+      }

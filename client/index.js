@@ -57,10 +57,15 @@ module.exports.connect = function(options, cb){
 		name:  options.name
 	});
 
-	stdoutHooked = hookStream(process.stdout, send('stdout'));
-	stderrHooked = hookStream(process.stderr, send('stderr'));
+	socket.on('ready', function () {
 
-	socket.on('exec', doExec);
+		console.log('ready to start logging to console.io');
+		stdoutHooked = hookStream(process.stdout, send('stdout'));
+		stderrHooked = hookStream(process.stderr, send('stderr'));
+
+		socket.on('exec', doExec);
+	});
+
 };
 
 module.exports.disconnect = function(cb){
@@ -90,7 +95,7 @@ module.exports.disconnect = function(cb){
 {
 	try
 	{
-		process.stdout.write(code + '\r');
+		process.stdout.write(code + '\n');
 		console.log(eval('(function (){' + code  +'})();'));
 	}
 	catch (e)

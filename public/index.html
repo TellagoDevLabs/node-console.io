@@ -61,10 +61,22 @@
 
         consoles[data._id] = $('#' + data._id + ' .output').jqconsole(header, data.hostname + '> ');
 
+        var startPrompt = function () {
+          // Start the prompt with history enabled.
+          consoles[data._id].Prompt(true, function (input) {
+            // Output input with the class jqconsole-output.
+            //jqconsole.Write(input + '\n', 'jqconsole-output');
+            console.log('sending command: ' + input);
+            socket.emit('exec', {_id: data._id, command: input});
+            // Restart the prompt.
+            startPrompt();
+          });
+        };
+        startPrompt();
       });
 
 		  socket.on('news', function (data) {
-        consoles[data._id].Write( new Date().toLocaleTimeString() + '> '+ JSON.stringify(data.data, 0, 2) + '\n');
+        consoles[data._id].Write( new Date().toLocaleTimeString() + '> '+ data.data);
 		  });
 
 

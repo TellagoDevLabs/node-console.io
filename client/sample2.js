@@ -12,7 +12,7 @@ app.use(function(req, res, next){
 
 ncc.connect({
 	endpoint: "http://localhost:8080/node-rc-log",
-	name: "marketplace"
+	name: "apphost"
 }, function(err, result){
 });	
 

@@ -25,23 +25,31 @@ log.on('connection', function ( socket ) {
 
         if (!client) {
             id._id = new Date().getTime();
+            id.socket = socket;
             clients.push(id);
         } else {
+            //in case of reconnect of the client.
             id._id = client._id;
+            client.socket = socket;
         }
 
-        socket.set('identity', id, function () {
+        socket.set('identity', id._id, function () {
             socket.emit('ready');
-            web.emit('new-console', id);
+            web.emit('new-console', {
+                _id: id._id,
+                hostname: id.hostname,
+                name: id.name
+            });
         });
     });
 
     socket.on('log', function (data) {
-        socket.get('identity', function ( err, id ) {
-            if (id) {
+        socket.get('identity', function ( err, _id ) {
+            if (_id) {
                 web.emit('news', {
-                    _id: id._id,
-                    data: data
+                    _id: _id,
+                    source: data.source,
+                    data: data.data
                 });
             }
         });
@@ -53,6 +61,22 @@ log.on('connection', function ( socket ) {
 
 web.on('connection', function ( socket ) {
     for(var i in clients) {
-        socket.emit('new-console', clients[i]);
+        socket.emit('new-console', {
+                _id: clients[i]._id,
+                hostname: clients[i].hostname,
+                name: clients[i].name
+            });
     }
+
+    socket.on('exec', function ( data ) {
+
+        console.log("exec'ing", JSON.stringify( data ));
+
+        var client = clients.filter(function ( c ) { return c._id === data._id; })[0];
+        console.log('client: ' + client);
+        if (client) {
+            client.socket.emit('exec', data.command);
+        }
+
+    });
 });

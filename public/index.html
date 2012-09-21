@@ -3,12 +3,7 @@
   <head>
     <title>Console.io Dashboard</title>
     <link href="/css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yandex.st/highlightjs/7.2/styles/default.min.css">
     <link href="/css/site.css" rel="stylesheet">
-    <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
-    <script>
-      hljs.initHighlightingOnLoad();      
-    </script>
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -61,9 +56,6 @@
         var startPrompt = function () {
           // Start the prompt with history enabled.
           consoles[data._id].Prompt(true, function (input) {
-            // Output input with the class jqconsole-output.
-            //jqconsole.Write(input + '\n', 'jqconsole-output');
-            console.log('sending command: ' + input);
             socket.emit('exec', {_id: data._id, command: input});
             // Restart the prompt.
             startPrompt();
@@ -73,9 +65,8 @@
       });
 
 		  socket.on('news', function (data) {
-        consoles[data._id].Write( new Date().toLocaleTimeString() + '> '+ data.data);
+        consoles[data._id].Write( new Date().toLocaleTimeString() + '> '+ data.data, data.source );
 		  });
-
 
 		</script>
 	</body>

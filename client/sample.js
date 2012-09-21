@@ -3,7 +3,7 @@ var ncc = require("./index.js"),
     server = require('http').createServer(app);
 
 var ping = function(name) {
-	console.log('Hello ' + name + '!')
+	console.log('Hello ' + name + '!');
 }
 app.use(function(req, res, next){
     console.log('\n'+ req.method +' '+req.url,'\n', req.body);
@@ -14,7 +14,6 @@ ncc.connect({
 	endpoint: "http://localhost:8080/node-rc-log",
 	name: "marketplace"
 }, function(err, result){
-});	
+});
 
 server.listen(8081);
-

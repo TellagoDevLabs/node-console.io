@@ -2,7 +2,8 @@ var io = require('socket.io-client'),
 	os = require("os"), 
 	socket,
 	stderrHooked,
-	stdoutHooked;
+	stdoutHooked,
+	session;
 
 module.exports.isConnected = function () {
 	return !!socket;
@@ -33,6 +34,8 @@ module.exports.connect = function(options, cb){
 	// Set default values for arguments
 	options.hostname = options.hostname || os.hostname();
 	options.timeout = options.timeout || 5000;
+
+	session = {};
 
 	// set socket's options
 	var socketOptions = {
@@ -89,28 +92,37 @@ module.exports.disconnect = function(cb){
 
 		socket.disconnect();
 	}
+	session = null;
 }
 
- doExec = function(code)
+doExec = function(code)
 {
 	try
 	{
 		process.stdout.write(code + '\n');
-		console.log(eval('(function (){' + code  +'})();'));
+		var fn = eval('(function (session){' + code  +'});')
+		var result = fn.call(session);
+		console.log(result);
 	}
 	catch (e)
 	{
-		console.log(e);
+		console.error(e);
 	}
 }
 
 hookStream = function(stream, writeFn) {
-    var oldWrite = stream.write;
+    var instance = { 
+    	oldWrite: stream.write,
+    	unhook : function() { 
+    		stream.write = this.oldWrite; 
+    	},
+    };
+
     stream.write = function(){
-    	oldWrite.apply(stream, arguments);
+    	instance.oldWrite.apply(stream, arguments);
     	writeFn.apply(stream, arguments);
     };
-    return { unhook : function() { stream.write = oldWriteFn; } };
+    return instance;
 }
 
 send = function(source){

@@ -3,7 +3,8 @@ var io = require('socket.io-client'),
 	socket,
 	stderrHooked,
 	stdoutHooked,
-	session;
+	session,
+	enabled;
 
 module.exports.isConnected = function () {
 	return !!socket;
@@ -31,11 +32,16 @@ module.exports.connect = function(options, cb){
 		throw err;
 	}
 
+	// Set initial status
+	session = {};
+	enabled = {
+		status: false,
+		fn: send
+	};
+
 	// Set default values for arguments
 	options.hostname = options.hostname || os.hostname();
 	options.timeout = options.timeout || 5000;
-
-	session = {};
 
 	// set socket's options
 	var socketOptions = {
@@ -63,9 +69,8 @@ module.exports.connect = function(options, cb){
 	socket.on('ready', function () {
 
 		console.log('ready to start logging to console.io');
-		stdoutHooked = hookStream(process.stdout, send('stdout'));
-		stderrHooked = hookStream(process.stderr, send('stderr'));
-
+		enable();
+		socket.on('enabled', doEnabled);
 		socket.on('exec', doExec);
 	});
 
@@ -75,15 +80,7 @@ module.exports.disconnect = function(cb){
 
 	if (socket) {
 		
-		if (stdoutHooked) {
-			stdoutHooked.unhook();
-			stdoutHooked = null;
-		} 
-
-		if (stderrHooked) {
-			stderrHooked.unhook();
-			stderrHooked = null;
-		} 
+		diable();		
 
 		socket.on('disconnect', function () {
 			socket = null;
@@ -99,16 +96,22 @@ doExec = function(code)
 {
 	try
 	{
-		process.stdout.write(code + '\n');
-		var fn = eval('(function (session){' + code  +'});')
+		enabled.fn(code + '\n');
+		var fn = eval('(function (){' + code  +'});')
 		var result = fn.call(session);
-		console.log(result);
+		enabled.fn(result);
 	}
 	catch (e)
 	{
 		console.error(e);
 	}
 }
+
+doEnabled = function(value, fn){
+	if (value===true) enable();
+	else if (value===false) disable();
+	fn(enabled.status)
+};
 
 hookStream = function(stream, writeFn) {
     var instance = { 
@@ -134,3 +137,26 @@ send = function(source){
 	};
 }
 
+enable = function(){
+	if (!stdoutHooked) stdoutHooked = hookStream(process.stdout, send('stdout'));
+	if (!stderrHooked) stderrHooked = hookStream(process.stderr, send('stderr'));
+	enabled.status = true;
+	enabled.fn = console.log;
+	console.log("console.io was enabled");
+}
+
+disable = function(){
+	console.log("console.io was disabled");
+
+	if (stdoutHooked) {
+		stdoutHooked.unhook();
+		stdoutHooked = null;
+	} 
+
+	if (stderrHooked) {
+		stderrHooked.unhook();
+		stderrHooked = null;
+	} 
+	enabled.status = false;
+	enabled.fn = send;
+}

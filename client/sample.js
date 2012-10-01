@@ -1,4 +1,4 @@
-var ncc = require("./index.js"),
+var ncc = require("console.io-client"),
 	app = require('express')(),
     server = require('http').createServer(app);
 

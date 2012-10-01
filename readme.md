@@ -58,13 +58,28 @@ subscribing to the 'web' namespace. You can see how it works in the
 
 ## Adding console.io to your node.js app
 
-First install console.io-client from npm:
+You will find that integrating console.io to your node.js apps is ridiculously
+simple.
+
+### Example
+
+```js
+	ncc.connect({
+			endpoint: "http://localhost:8080/console.io-log",
+			name: "marketplace"
+		}, function(err, result){
+	});
+```
+
+### Installation
 
 ```
 	npm install console.io-client
 ```
 
-Then do this once in every node.js process:
+### Usage
+
+Add this once in every node.js process:
 
 ```js
 	ncc.connect(options, callback);
@@ -76,15 +91,9 @@ Then do this once in every node.js process:
 * `name`: unique name of this particular node.js process.
 * `disableExec`: disable the remote execution of code.
 
-### Example
-
-```js
-	ncc.connect({
-			endpoint: "http://localhost:8080/console.io-log",
-			name: "marketplace"
-		}, function(err, result){
-	});
-```
+### Contributors
+[Silvio Massari](https://github.com/silviom)
+[Gustavo Machado](https://github.com/machadogj)
 
 ## License 
 

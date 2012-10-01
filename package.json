@@ -1,0 +1,32 @@
+{
+  "author": "Tellago Studios <silvio.massari@tellago.com>",
+  "name": "console.io",
+  "description": "Access your node.js console remotely.",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TellagoDevLabs/node-console.io.git"
+  },
+  "main": "server/index.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "socket.io": "0.9.10",
+    "console.io-client":"*",
+    "express":"*"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "contributors":[
+    {
+      "name":"Silvio Massari",
+      "email":"silvio.massari@gmail.com"
+    },
+    {
+      "name":"Gustavo Machado",
+      "email":"machadogj@gmail.com"
+    }
+  ]
+}

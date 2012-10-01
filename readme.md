@@ -10,10 +10,10 @@ and even execute code remotely.
 
 ## Running the Dashboard
 
-1.-  node app.js
-2.-  open http://localhost:8080 in the browser (dashboard).
-3.-  cd client && node sample.js
-4.-  open http://localhost:8081 in the browser.
+1.  node app.js
+2.  open http://localhost:8080 in the browser (dashboard).
+3.  cd client && node sample.js
+4.  open http://localhost:8081 in the browser.
 
 In order to see another console in the dashboard, run sample2.js (8082) as well.
 
@@ -92,8 +92,8 @@ Add this once in every node.js process:
 * `disableExec`: disable the remote execution of code.
 
 ### Contributors
-[Silvio Massari](https://github.com/silviom)
-[Gustavo Machado](https://github.com/machadogj)
+- [Silvio Massari](https://github.com/silviom)
+- [Gustavo Machado](https://github.com/machadogj)
 
 ## License 
 

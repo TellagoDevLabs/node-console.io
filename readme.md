@@ -65,7 +65,7 @@ simple.
 
 ```js
 	ncc.connect({
-			endpoint: "http://localhost:8080/console.io-log",
+			endpoint: "http://localhost:8080",
 			name: "marketplace"
 		}, function(err, result){
 	});
@@ -82,6 +82,7 @@ simple.
 Add this once in every node.js process:
 
 ```js
+	var ncc = require('console.io-client');
 	ncc.connect(options, callback);
 ```
 

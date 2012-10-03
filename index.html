@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="console.io : A remote control for your nodejs service." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>console.io</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/TellagoDevLabs/node-console.io">View on GitHub</a>
+
+          <h1 id="project_title">console.io</h1>
+          <h2 id="project_tagline">A remote control for your nodejs service.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/TellagoDevLabs/node-console.io/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/TellagoDevLabs/node-console.io/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>console.io allows you to access the console of your running node.js instances
+and even execute code remotely. View the a <a href="http://www.screencast.com/t/3wrAbR12">demo</a></p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Read the stderr and stdout from a website in real-time.</li>
+<li>Execute code remotely in a specific running node.js process.</li>
+<li>Built in dashboard allows for multiple consoles at the same time.</li>
+<li>Hookable api for using console.io in your own front end.</li>
+</ul><h2>Running the Dashboard</h2>
+
+<ol>
+<li> node app.js</li>
+<li> open http://localhost:8080 in the browser (dashboard).</li>
+<li> cd client &amp;&amp; node sample.js</li>
+<li> open http://localhost:8081 in the browser.</li>
+</ol><p>In order to see another console in the dashboard, run sample2.js (8082) as well.</p>
+
+<h3>Logs</h3>
+
+<p>Logs will start showing in real time. Errors will be displayed in red.</p>
+
+<h3>Prompt</h3>
+
+<p>There will be a prompt with the name of the host, where you can start running
+scripts. Notice that if you want to see something in the output you are going
+to have to either:</p>
+
+<ul>
+<li>Call console.log('your message') from within your script.</li>
+<li>Return whatever to want to be printed.</li>
+</ul><h4>Examples</h4>
+
+<div class="highlight"><pre>    <span class="c1">//this will print 4.</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="c1">//this will print undefined.</span>
+    <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="c1">//this will print 4 and then undefined.</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">);</span>
+</pre></div>
+
+<p>The script will be printed right before the result, so that other dashboards
+looking at the console, see the script and can make something out of the output</p>
+
+<h2>Running console.io in your own Dashboard</h2>
+
+<p>If you would like to see the logs in your own front end, you pass an instance
+of socket.io to the "server" module.</p>
+
+<div class="highlight"><pre>    <span class="nx">require</span><span class="p">(</span><span class="s1">'console.io/server'</span><span class="p">).</span><span class="nx">hook</span><span class="p">(</span><span class="nx">io</span><span class="p">);</span>
+</pre></div>
+
+<p>From the website perspective it's pretty easy to receive messages. You start by
+subscribing to the 'web' namespace. You can see how it works in the 
+\public\index.html file.</p>
+
+<h2>Adding console.io to your node.js app</h2>
+
+<p>You will find that integrating console.io to your node.js apps is ridiculously
+simple.</p>
+
+<h3>Example</h3>
+
+<div class="highlight"><pre>    <span class="nx">ncc</span><span class="p">.</span><span class="nx">connect</span><span class="p">({</span>
+            <span class="nx">endpoint</span><span class="o">:</span> <span class="s2">"http://localhost:8080"</span><span class="p">,</span>
+            <span class="nx">name</span><span class="o">:</span> <span class="s2">"marketplace"</span>
+        <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+    <span class="p">});</span>
+</pre></div>
+
+<h3>Installation</h3>
+
+<pre><code>    npm install console.io-client
+</code></pre>
+
+<h3>Usage</h3>
+
+<p>Add this once in every node.js process:</p>
+
+<div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">ncc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'console.io-client'</span><span class="p">);</span>
+    <span class="nx">ncc</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+</pre></div>
+
+<h3>Options</h3>
+
+<ul>
+<li>
+<code>endpoint</code>: url to the dashboard.</li>
+<li>
+<code>name</code>: unique name of this particular node.js process.</li>
+<li>
+<code>disableExec</code>: disable the remote execution of code.</li>
+</ul><h3>Contributors</h3>
+
+<ul>
+<li><a href="https://github.com/silviom">Silvio Massari</a></li>
+<li><a href="https://github.com/machadogj">Gustavo Machado</a></li>
+</ul><h2>License</h2>
+
+<p><a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">console.io maintained by <a href="https://github.com/TellagoDevLabs">TellagoDevLabs</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>

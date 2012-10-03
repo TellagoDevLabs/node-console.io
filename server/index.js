@@ -14,16 +14,20 @@ module.exports.hook = function ( io ) {
     */
     log.on('connection', function ( socket ) {
 
+        /*
+        params:
+            - id: { hostname: string, name: string }
+        */
         socket.on('set identity', function ( id ) {
 
-            var _id = (id.hostname + id.name);
-            if (!clients[_id]) {
-                //if it's a new console, assign id.
-                clients[_id] = id;
-            }
+            if (!id || !id.hostname) return;
 
-            clients[_id]._id = _id;
-            //in case of reconnect of the client update the socket.
+            var _id = (id.hostname + id.name);
+
+            //if it's a new console, assign id.
+            if (!clients[_id]) clients[_id] = id;
+
+            //in case of reconnect of the client update the asocket.
             clients[_id].socket = socket;
             
             socket.set('identity', _id, function () {
@@ -38,20 +42,26 @@ module.exports.hook = function ( io ) {
             });
         });
 
-        //send console.log to the website channel.
-        socket.on('log', function (data) {
-            //if _id is null, then the console did not emit 'set identity'
-            //{hostname, name} yet. it's ok ot discard.
-            socket.get('identity', function ( err, _id ) {
-                if (_id) {
-                    web.emit('news', {
-                        _id: _id,
-                        source: data.source,
-                        data: data.data
-                    });
-                }
-            });
-        });
+
+        function pushToWeb( source ) {
+            return function ( data ) {
+                //if _id is null, then the console did not emit 'set identity'
+                //{hostname, name} yet. it's ok ot discard.
+                socket.get('identity', function ( err, _id ) {
+                    if (_id) {
+                        web.emit('news', {
+                            _id: _id,
+                            source: source,
+                            data: data.data
+                        });
+                    }
+                });
+            };
+        }
+
+        //send console output to the website channel.
+        socket.on('stdErr', pushToWeb( 'stderr' ));
+        socket.on('stdOut', pushToWeb( 'stdout' ));
 
     });
 
@@ -59,9 +69,9 @@ module.exports.hook = function ( io ) {
 
         //send the current list of consoles to the website upon
         //first connect.
-        for(var i in Object.keys(clients)) {
+        for(var i in clients) {
             socket.emit('new-console', {
-                    _id: clients[i]._id,
+                    _id: i,
                     hostname: clients[i].hostname,
                     name: clients[i].name
                 });

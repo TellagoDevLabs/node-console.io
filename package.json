@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "socket.io": "0.9.10",
-    "console.io-client":"*",
+    "console.io-client":">=0.0.2",
     "express":"*"
   },
   "optionalDependencies": {},

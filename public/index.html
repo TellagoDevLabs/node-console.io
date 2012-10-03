@@ -13,9 +13,9 @@
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="row" id="consoles">
-      </div>
+    <div class="container-fluid">
+      <ul id="consoles">
+      </ul>
       <div style="clear:both"></div>
       <hr>
       copyright 2012 console.io
@@ -40,13 +40,10 @@
 
 
         $('#consoles').append(
-          '<div id="' + data._id + '" class="span6">' +
+          '<li id="' + data._id + '" >' +
             '<h2>' + data.hostname + '/' + data.name + '</h2>' +
-            '<div class="row">' +
-              '<div class="output span6"></div>' +
-              '<div style="clear:both">' +
-            '</div>' +
-          '</div>');
+            '<div class="output" style="width: 450px;"></div>' +
+          '</li>');
         
         // Creating the console.
         var header = 'Console log output:\n';
@@ -65,7 +62,7 @@
       });
 
 		  socket.on('news', function (data) {
-        consoles[data._id].Write( new Date().toLocaleTimeString() + '> '+ data.data, data.source );
+        consoles[data._id].Write( '> '+ data.data, data.source );
 		  });
 
 		</script>

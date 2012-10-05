@@ -1,9 +1,20 @@
-module.exports.hook = function ( io ) {
+/*
+options:
+    - key: the secret key that the console.io-client will need for connecting
+           to this dashboard.
+    - secure: use the handshake.user.key to validate the web user.
+*/
+module.exports.hook = function ( io, options ) {
 
+    console.log('hooking console.io...');
+
+    options = options || {};
+        
+    var key = options.key || '',
         //log communicates with all the different consoles.
-    var log = io.of('/console.io-log'),
+        log = io.of('/console.io-log' + key),
         //we use web to communicate with the different websites.
-        web = io.of('/console.io-web'),
+        web = io.of('/console.io-web' + key),
         clients = {};
     /*
     consoles.
@@ -54,6 +65,8 @@ module.exports.hook = function ( io ) {
                             source: source,
                             data: data.data
                         });
+                    } else {
+                        console.log('the console socket didnt have the identity.');
                     }
                 });
             };
@@ -66,6 +79,15 @@ module.exports.hook = function ( io ) {
     });
 
     web.on('connection', function ( socket ) {
+
+        console.log ('new connection');
+
+        if ( options.secure && socket.handshake.user.key !== options.key ) {
+            console.log('refusing the connection');
+            socket.disconnect();
+        }
+
+        console.log('connection accepted.');
 
         //send the current list of consoles to the website upon
         //first connect.
@@ -86,4 +108,5 @@ module.exports.hook = function ( io ) {
         });
     });
 
+    return { log: log, web: web };
 };

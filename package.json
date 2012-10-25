@@ -2,7 +2,7 @@
   "author": "Tellago Studios <silvio.massari@tellago.com>",
   "name": "console.io",
   "description": "Access your node.js console remotely.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/TellagoDevLabs/node-console.io.git"

@@ -106,6 +106,15 @@ module.exports.hook = function ( io, options ) {
                 client.socket.emit('exec', data.command);
             }
         });
+
+        socket.on('enabled', function ( data, fn ) {
+            var client = clients[data._id];
+            if (clients && client.socket) {
+                client.socket.emit('enabled', data.enabled, function (response) {
+                    fn(response);
+                });
+            }
+        });
     });
 
     return { log: log, web: web };
